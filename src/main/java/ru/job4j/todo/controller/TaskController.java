@@ -65,7 +65,7 @@ public class TaskController {
         model.addAttribute("task", task.get());
         return "tasks/edit";
     }
-    git add .
+
     @PostMapping("/edit")
     public String edit(@ModelAttribute Task task) {
         if (!taskService.update(task)) {
