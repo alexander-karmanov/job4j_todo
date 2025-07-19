@@ -30,7 +30,21 @@
                 <a class="nav-item nav-link active" href="#">Все задания <span class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link" th:href="@{/tasks/newTasks}">Новые</a>
                 <a class="nav-item nav-link" th:href="@{/tasks/doneTasks}">Выполненные</a>
-
+                <a class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink"
+                               role="button" data-toggle="dropdown" aria-expanded="false">
+                                <span th:text="${user.name}"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark"
+                                aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li><a class="dropdown-item" th:href="@{/formUpdate}">Редактировать профиль</a></li>
+                                <li><a class="dropdown-item" th:href="@{/logout}">Выйти</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </a>
             </div>
         </div>
     </nav>
@@ -54,11 +68,10 @@
                 </td>
                 <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"></td>
                 <td th:text="${task.done} ? 'Выполнено' : 'Новое'"></td>
-
             </tr>
             </tbody>
         </table>
-        <a class="btn btn-primary" role="button">Добавить задание</a>
+        <a class="btn btn-primary" th:href="@{/tasks/formCreate}" role="button">Добавить задание</a>
     </div>
 </div>
 </body>

@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -27,30 +27,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" th:href="@{/tasks/}">Все задания</a>
-                <a class="nav-item nav-link" th:href="@{/tasks/newTasks}">Новые</a>
-                <a class="nav-item nav-link" th:href="@{/tasks/doneTasks}">Выполненные</a>
+                <a class="nav-item nav-link" th:href="@{/tasks/all}">Главная</a>
+                <a class="nav-item nav-link" th:href="@{/formAddUser}">Регистрация пользователя</a>
             </div>
         </div>
     </nav>
-    <div class="row pt-3">
-        <div class="card" style="width: 100%">
-            <div class="card-header">
-                Редактирование задания.
-            </div>
-            <div class="card-body">
-                <form th:action="@{/tasks/edit}" method="POST" th:object="${task}">
-                    <input type="hidden" name="id" th:field="*{id}"/>
-                    <input type="hidden" name="created" th:field="*{created}"/>
-                    <input type="hidden" name="done" th:field="*{done}"/>
-                    <div class="form-group">
-                        <label for="description">Описание</label>
-                        <input type="text" class="form-control" name="description" id="description" th:field="*{description}">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
-                </form>
-            </div>
-        </div>
+    <div class="card-body">
+        <td th:text="${message}" />
     </div>
 </div>
 </body>

@@ -30,7 +30,21 @@
                 <a class="nav-item nav-link" th:href="@{/tasks/}">Все задания</a>
                 <a class="nav-item nav-link" th:href="@{/tasks/newTasks}">Новые</a>
                 <a class="nav-item nav-link active" href="#">Выполненные <span class="sr-only">(current)</span></a>
-
+                <a class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink"
+                               role="button" data-toggle="dropdown" aria-expanded="false">
+                                <span th:text="${user.name}"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark"
+                                aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li><a class="dropdown-item" th:href="@{/update}">Редактировать профиль</a></li>
+                                <li><a class="dropdown-item" th:href="@{/logout}">Выйти</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </a>
             </div>
         </div>
     </nav>

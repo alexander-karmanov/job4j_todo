@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,14 +80,17 @@ public class HbmTaskRepository implements TaskRepository {
     }
 
     @Override
-    public List<Task> findAll() {
+    public List<Task> findAll(User user) {
         Session session = sf.openSession();
         List<Task> result = new ArrayList<>();
         try {
             session.beginTransaction();
-            result = session.createQuery("from ru.job4j.todo.model.Task", Task.class).list();
+            String hql = "from ru.job4j.todo.model.Task t where t.user.id = :userId";
+            result = session.createQuery(hql, Task.class)
+                    .setParameter("userId", user.getId())
+                    .list();
             session.getTransaction().commit();
-        }  catch (Exception e) {
+        } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();

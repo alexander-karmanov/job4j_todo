@@ -1,9 +1,12 @@
 package ru.job4j.todo.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.filter.UserSession;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
 import java.util.List;
@@ -19,23 +22,25 @@ public class TaskController {
     }
 
     @GetMapping("/")
-    public String getAll(Model model) {
-        List<Task> allTasks = taskService.findAll();
-        model.addAttribute("tasks", allTasks);
+    public String getAll(Model model, HttpSession session) {
+        User user = UserSession.getUser(session);
+        List<Task> userTasks = taskService.findAll(user);
+        model.addAttribute("user", user);
+        model.addAttribute("tasks", userTasks);
         return "tasks/all";
     }
 
     @GetMapping("/newTasks")
-    public String getNewTasksList(Model model) {
-        List<Task> newTasks = taskService.findTasks(false);
-        model.addAttribute("newTasks", newTasks);
+    public String getNewTasksList(Model model, HttpSession session) {
+        User user = UserSession.getUser(session);
+        model.addAttribute("user", user);
         return "tasks/new";
     }
 
     @GetMapping("/doneTasks")
-    public String getDoneTasksList(Model model) {
-        List<Task> doneTasks = taskService.findTasks(true);
-        model.addAttribute("doneTasks", doneTasks);
+    public String getDoneTasksList(Model model, HttpSession session) {
+        User user = UserSession.getUser(session);
+        model.addAttribute("user", user);
         return "tasks/done";
     }
 
@@ -69,7 +74,7 @@ public class TaskController {
     @PostMapping("/edit")
     public String edit(@ModelAttribute Task task) {
         if (!taskService.update(task)) {
-            return "/errors/error";
+            return "errors/error";
         }
         return "redirect:/tasks/";
     }

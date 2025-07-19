@@ -36,16 +36,16 @@
     <div class="row pt-3">
         <div class="card" style="width: 100%">
             <div class="card-header">
-                Редактирование задания.
+                Редактирование профиля.
             </div>
             <div class="card-body">
-                <form th:action="@{/tasks/edit}" method="POST" th:object="${task}">
+                <form th:action="@{/update}" method="POST" th:object="${user}">
                     <input type="hidden" name="id" th:field="*{id}"/>
-                    <input type="hidden" name="created" th:field="*{created}"/>
-                    <input type="hidden" name="done" th:field="*{done}"/>
+                    <input type="hidden" name="name" th:field="*{name}"/>
+                    <input type="hidden" name="email" th:field="*{email}"/>
                     <div class="form-group">
-                        <label for="description">Описание</label>
-                        <input type="text" class="form-control" name="description" id="description" th:field="*{description}">
+                        <label for="password">Пароль</label>
+                        <input type="password" class="form-control" name="password" id="password" th:field="*{password}">
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>
