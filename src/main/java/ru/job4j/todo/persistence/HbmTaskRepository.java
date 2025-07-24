@@ -85,7 +85,7 @@ public class HbmTaskRepository implements TaskRepository {
         List<Task> result = new ArrayList<>();
         try {
             session.beginTransaction();
-            String hql = "from ru.job4j.todo.model.Task t where t.user.id = :userId";
+            String hql = "FROM ru.job4j.todo.model.Task t WHERE t.user.id = :userId";
             result = session.createQuery(hql, Task.class)
                     .setParameter("userId", user.getId())
                     .list();
@@ -105,7 +105,7 @@ public class HbmTaskRepository implements TaskRepository {
         try {
             session.beginTransaction();
             result = session.createQuery(
-                            "from Task where done = :status", Task.class)
+                            "FROM Task WHERE done = :status", Task.class)
                     .setParameter("status", status)
                     .list();
             session.getTransaction().commit();

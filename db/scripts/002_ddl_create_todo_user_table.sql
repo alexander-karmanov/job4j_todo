@@ -1,6 +1,6 @@
 CREATE TABLE todo_user (
    id SERIAL PRIMARY KEY,
-   name varchar NOT NULL,
-   email varchar NOT NULL UNIQUE,
-   password varchar NOT NULL
+   name VARCHAR NOT NULL,
+   email VARCHAR NOT NULL UNIQUE,
+   password VARCHAR NOT NULL
 );

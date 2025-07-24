@@ -35,7 +35,7 @@ public class HbmUserRepository implements UserRepository {
         try {
             session.beginTransaction();
             User user = session.createQuery(
-                            "from ru.job4j.todo.model.User where email = :email and password = :password", User.class)
+                            "FROM ru.job4j.todo.model.User WHERE email = :email AND password = :password", User.class)
                     .setParameter("email", email)
                     .setParameter("password", password)
                     .uniqueResult();
