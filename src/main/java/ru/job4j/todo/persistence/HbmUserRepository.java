@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -13,54 +14,31 @@ import java.util.Optional;
 public class HbmUserRepository implements UserRepository {
     private final SessionFactory sf;
 
+    private final CrudRepository crudRepository;
+
     @Override
     public Optional<User> add(User user) {
-        Session session = sf.openSession();
-        try {
-            session.beginTransaction();
-            session.save(user);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return Optional.of(user);
+        crudRepository.run(session -> session.persist(user));
+        return Optional.ofNullable(user);
     }
 
     @Override
     public Optional<User> findUserByEmailAndPassword(String email, String password) {
-        Session session = sf.openSession();
-        Optional<User> result = Optional.empty();
-        try {
-            session.beginTransaction();
-            User user = session.createQuery(
-                            "FROM ru.job4j.todo.model.User WHERE email = :email AND password = :password", User.class)
-                    .setParameter("email", email)
-                    .setParameter("password", password)
-                    .uniqueResult();
-            session.getTransaction().commit();
-            result = Optional.ofNullable(user);
-        } catch (Exception e) {
-                session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return result;
+        return crudRepository.optional("SELECT u FROM User AS u WHERE u.email = :fEmail AND "
+                        + "u.password = :fPassword", User.class,
+                Map.of("fEmail", email, "fPassword", password));
     }
 
     @Override
     public boolean update(User user) {
-        Session session = sf.openSession();
-        try {
-            session.beginTransaction();
-            session.update(user);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return true;
+        String query = "UPDATE User u SET u.name = :fName, u.email = :fEmail, u.password = :fPassword WHERE u.id = :fId";
+        Map<String, Object> params = Map.of(
+                "fName", user.getName(),
+                "fEmail", user.getEmail(),
+                "fPassword", user.getPassword(),
+                "fId", user.getId()
+        );
+        int updatedCount = crudRepository.executeUpdate(query, params);
+        return updatedCount > 0;
     }
 }
