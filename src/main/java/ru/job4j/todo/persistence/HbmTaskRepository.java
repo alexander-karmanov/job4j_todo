@@ -99,14 +99,15 @@ public class HbmTaskRepository implements TaskRepository {
     }
 
     @Override
-    public List<Task> findTasks(boolean status) {
+    public List<Task> findTasks(boolean status, User user) {
         Session session = sf.openSession();
         List<Task> result = new ArrayList<>();
         try {
             session.beginTransaction();
             result = session.createQuery(
-                            "FROM Task WHERE done = :status", Task.class)
-                    .setParameter("status", status)
+                            "FROM Task WHERE done = :fDone AND user.id = :fUser_id", Task.class)
+                    .setParameter("fDone", status)
+                    .setParameter("fUser_id", user.getId())
                     .list();
             session.getTransaction().commit();
         } catch (Exception e) {

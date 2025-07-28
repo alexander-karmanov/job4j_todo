@@ -17,7 +17,7 @@ public interface TaskService {
 
     List<Task> findAll(User user);
 
-    List<Task> findTasks(boolean status);
+    List<Task> findTasks(boolean status, User user);
 
     void complete(int id);
 }

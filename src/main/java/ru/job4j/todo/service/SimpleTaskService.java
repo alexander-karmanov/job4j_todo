@@ -48,7 +48,7 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public List<Task> findTasks(boolean status) {
-        return repository.findTasks(status);
+    public List<Task> findTasks(boolean status, User user) {
+        return repository.findTasks(status, user);
     }
 }

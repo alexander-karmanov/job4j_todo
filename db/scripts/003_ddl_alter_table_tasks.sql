@@ -1,0 +1,3 @@
+ALTER TABLE tasks ADD COLUMN user_id INT NOT NULL;
+ALTER TABLE tasks ADD CONSTRAINT fk_user FOREIGN KEY
+(user_id) REFERENCES todo_user(id);

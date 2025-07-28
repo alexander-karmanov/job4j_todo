@@ -33,7 +33,7 @@ public class TaskController {
     @GetMapping("/newTasks")
     public String getNewTasksList(Model model, HttpSession session) {
         User user = UserSession.getUser(session);
-        List<Task> userTasks = (taskService.findTasks(false));
+        List<Task> userTasks = (taskService.findTasks(false, user));
         model.addAttribute("user", user);
         model.addAttribute("newTasks", userTasks);
         return "tasks/new";
@@ -42,7 +42,7 @@ public class TaskController {
     @GetMapping("/doneTasks")
     public String getDoneTasksList(Model model, HttpSession session) {
         User user = UserSession.getUser(session);
-        List<Task> userTasks = (taskService.findTasks(true));
+        List<Task> userTasks = (taskService.findTasks(true, user));
         model.addAttribute("user", user);
         model.addAttribute("doneTasks", userTasks);
         return "tasks/done";
