@@ -42,4 +42,10 @@ public class Task {
     @JoinColumn(name = "user_id")
     private User user;
 
+    /**
+     * Приоритет задания
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "priority_id")
+    private Priority priority;
 }

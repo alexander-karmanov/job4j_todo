@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 
+import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,8 @@ import java.util.Optional;
 public class HbmTaskRepository implements TaskRepository {
 
     private final SessionFactory sf;
+
+    private final CrudRepository crudRepository;
 
     @Override
     public Task add(Task task) {
@@ -37,14 +41,21 @@ public class HbmTaskRepository implements TaskRepository {
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            session.update(task);
+            String hql = "UPDATE Task SET description = :description, done = :done, priority.id = :priorityId WHERE id = :id";
+            Query query = session.createQuery(hql);
+            query.setParameter("description", task.getDescription());
+            query.setParameter("done", task.isDone());
+            query.setParameter("priorityId", task.getPriority().getId());
+            query.setParameter("id", task.getId());
+            int result = query.executeUpdate();
             session.getTransaction().commit();
+            return result > 0;
         } catch (Exception e) {
-            session.getTransaction().rollback();
+                session.getTransaction().rollback();
+            return false;
         } finally {
             session.close();
         }
-        return true;
     }
 
     @Override
@@ -69,14 +80,21 @@ public class HbmTaskRepository implements TaskRepository {
         Session session = sf.openSession();
         try {
             session.beginTransaction();
-            task = session.get(Task.class, id);
+            String hql = "FROM Task t LEFT JOIN FETCH t.priority WHERE t.id = :id";
+            Query query = session.createQuery(hql, Task.class);
+            query.setParameter("id", id);
+            List<Task> results = query.getResultList();
+            if (!results.isEmpty()) {
+                task = results.get(0);
+            }
             session.getTransaction().commit();
-        }  catch (Exception e) {
+        } catch (Exception e) {
             session.getTransaction().rollback();
+            e.printStackTrace();
         } finally {
             session.close();
         }
-        return Optional.of(task);
+        return Optional.ofNullable(task);
     }
 
     @Override
@@ -85,7 +103,7 @@ public class HbmTaskRepository implements TaskRepository {
         List<Task> result = new ArrayList<>();
         try {
             session.beginTransaction();
-            String hql = "FROM ru.job4j.todo.model.Task t WHERE t.user.id = :userId";
+            String hql = "FROM ru.job4j.todo.model.Task t JOIN FETCH t.priority WHERE t.user.id = :userId";
             result = session.createQuery(hql, Task.class)
                     .setParameter("userId", user.getId())
                     .list();
@@ -105,7 +123,7 @@ public class HbmTaskRepository implements TaskRepository {
         try {
             session.beginTransaction();
             result = session.createQuery(
-                            "FROM Task WHERE done = :fDone AND user.id = :fUser_id", Task.class)
+                            "FROM ru.job4j.todo.model.Task t JOIN FETCH t.priority WHERE t.done = :fDone AND t.user.id = :fUser_id", Task.class)
                     .setParameter("fDone", status)
                     .setParameter("fUser_id", user.getId())
                     .list();

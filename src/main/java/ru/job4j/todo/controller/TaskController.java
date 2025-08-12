@@ -1,12 +1,15 @@
 package ru.job4j.todo.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.filter.UserSession;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import java.util.List;
@@ -17,8 +20,13 @@ import java.util.Optional;
 public class TaskController {
     private final TaskService taskService;
 
-    public TaskController(TaskService taskService) {
+    private final PriorityService priorityService;
+
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+
+    public TaskController(TaskService taskService, PriorityService priorityService) {
         this.taskService = taskService;
+        this.priorityService = priorityService;
     }
 
     @GetMapping("/")
@@ -56,6 +64,7 @@ public class TaskController {
         }
         Task task = optTask.get();
         model.addAttribute("task", task);
+        model.addAttribute("priorities", priorityService.getAll());
         return "tasks/info";
     }
 
@@ -72,6 +81,7 @@ public class TaskController {
             return "errors/error";
         }
         model.addAttribute("task", task.get());
+        model.addAttribute("priorities", priorityService.getAll());
         return "tasks/edit";
     }
 
