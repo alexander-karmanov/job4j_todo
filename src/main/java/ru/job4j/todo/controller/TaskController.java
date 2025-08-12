@@ -22,8 +22,6 @@ public class TaskController {
 
     private final PriorityService priorityService;
 
-    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
-
     public TaskController(TaskService taskService, PriorityService priorityService) {
         this.taskService = taskService;
         this.priorityService = priorityService;

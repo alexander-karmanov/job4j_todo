@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface PriorityService {
     List<Priority> getAll();
+
     Optional<Priority> findById(int id);
 }
