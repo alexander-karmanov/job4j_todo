@@ -7,11 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.filter.UserSession;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +26,12 @@ public class TaskController {
 
     private final PriorityService priorityService;
 
-    public TaskController(TaskService taskService, PriorityService priorityService) {
+    private final CategoryService categoryService;
+
+    public TaskController(TaskService taskService, PriorityService priorityService, CategoryService categoryService) {
         this.taskService = taskService;
         this.priorityService = priorityService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/")
@@ -96,6 +103,25 @@ public class TaskController {
         if (!taskService.delete(id)) {
             return "errors/error";
         }
+        return "redirect:/tasks/";
+    }
+
+    @GetMapping("/formCreate")
+    public String formCreateTask(Model model) {
+        model.addAttribute("task", new Task(0, "описание", LocalDateTime.now(),
+                false, new User(), new Priority(), new ArrayList<>()));
+        model.addAttribute("priorities", priorityService.getAll());
+        model.addAttribute("categories", categoryService.getAll());
+        return "tasks/add";
+    }
+
+    @PostMapping("/create")
+    public String createTask(@ModelAttribute Task task, HttpSession session,
+                             @RequestParam(value = "categories", required = false) List<Integer> categoriesIds) {
+        User user = UserSession.getUser(session);
+        task.setUser(user);
+        task.setCreated(LocalDateTime.now());
+        taskService.add(task, categoriesIds);
         return "redirect:/tasks/";
     }
 }

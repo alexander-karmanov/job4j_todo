@@ -18,7 +18,7 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Task add(Task task) {
+    public Task add(Task task, List<Integer> ids) {
         return repository.add(task);
     }
 
