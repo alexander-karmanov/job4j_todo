@@ -12,7 +12,9 @@ public class SimpleTimeZoneService implements TimeZoneService {
 
     public List<TimeZoneDTO> getAllTimeZones() {
         TimeZone defTz = null;
-        if (defTz == null) defTz = TimeZone.getDefault();
+        if (defTz == null) {
+            defTz = TimeZone.getDefault();
+        }
 
         List<TimeZoneDTO> zones = new ArrayList<>();
         for (String id : TimeZone.getAvailableIDs()) {
