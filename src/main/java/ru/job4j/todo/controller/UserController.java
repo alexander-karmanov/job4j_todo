@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.todo.filter.UserSession;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.TimeZoneService;
 import ru.job4j.todo.service.UserService;
 
 import java.util.Optional;
@@ -19,12 +20,16 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService service) {
+    private final TimeZoneService timeZoneService;
+
+    public UserController(UserService service,  TimeZoneService timeZoneService) {
         this.userService = service;
+        this.timeZoneService = timeZoneService;
     }
 
     @PostMapping("/registration")
-    public String registration(@ModelAttribute User user) {
+    public String registration(@ModelAttribute User user, @RequestParam(name = "timeZone.id", required = false) String zoneId) {
+        user.setTimeZone(zoneId);
         Optional<User> optionalUser = userService.add(user);
         if (optionalUser.isEmpty()) {
             return "redirect:/fail";
@@ -48,6 +53,7 @@ public class UserController {
     public String addUser(Model model, HttpSession session) {
         User user = UserSession.getUser(session);
         model.addAttribute("user", user);
+        model.addAttribute("timezones", timeZoneService.getAllTimeZones());
         return "auth/addUser";
     }
 

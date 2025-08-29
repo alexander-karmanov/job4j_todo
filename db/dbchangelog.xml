@@ -11,4 +11,9 @@
     <include file="scripts/004_ddl_create_table_priorities.sql" relativeToChangelogFile="true"/>
     <include file="scripts/005_ddl_alter_table_priority_fk_tasks.sql" relativeToChangelogFile="true"/>
     <include file="scripts/006_ddl_create_categories_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/007_dml_insert_into_categories.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/008_ddl_alter_timezone_into_users.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/009_ddl_alter_drop_created_tasks_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/010_ddl_alter_add_created_tasks_table.sql" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

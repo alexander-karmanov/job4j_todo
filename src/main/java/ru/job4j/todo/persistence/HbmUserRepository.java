@@ -31,11 +31,12 @@ public class HbmUserRepository implements UserRepository {
 
     @Override
     public boolean update(User user) {
-        String query = "UPDATE User u SET u.name = :fName, u.email = :fEmail, u.password = :fPassword WHERE u.id = :fId";
+        String query = "UPDATE User u SET u.name = :fName, u.email = :fEmail, u.password = :fPassword u.user_zone = :fUser_zone WHERE u.id = :fId";
         Map<String, Object> params = Map.of(
                 "fName", user.getName(),
                 "fEmail", user.getEmail(),
                 "fPassword", user.getPassword(),
+                "fUser_zone", user.getTimeZone(),
                 "fId", user.getId()
         );
         int updatedCount = crudRepository.executeUpdate(query, params);
